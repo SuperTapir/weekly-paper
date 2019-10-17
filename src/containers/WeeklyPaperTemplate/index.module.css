@@ -1,0 +1,15 @@
+.container {
+  padding: 20px;
+}
+
+.container .topicBlock {
+  padding: 20px 0;
+}
+
+.container .topicBlock .itemList {
+  padding-left: 30px;
+}
+
+.container .topicBlock .itemList .item {
+  padding: 5px 0;
+}
