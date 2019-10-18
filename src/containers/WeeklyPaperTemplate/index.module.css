@@ -13,3 +13,17 @@
 .container .topicBlock .itemList .item {
   padding: 5px 0;
 }
+
+.container .submitBtn {
+  margin-top: 20px;
+}
+
+.container .deleteIcon {
+  font-size: 20px;
+  color: #ff7875;
+  transition: 0.5s;
+}
+
+.container .deleteIcon:hover {
+  color: #f5222d;
+}
