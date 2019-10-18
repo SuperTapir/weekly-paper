@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Input, Button, Icon } from 'antd';
 import styles from './index.module.css';
-import { copy2ClipBoard } from '../../utils/index';
+import { copy2ClipBoard, savePaperData2Storage, getPaperData2Storage } from '../../utils/index';
 const { Title } = Typography;
 
 interface IProps {
@@ -27,7 +27,12 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
     ],
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    let temp = getPaperData2Storage();
+    if (Object.keys(temp).length !== 0) {
+      this.setState(temp);
+    }
+  }
 
   handleTitleChange = (str: string) => {
     console.log('Content change:', str);
@@ -43,11 +48,12 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
       } else {
         temp[index].topic = str;
       }
-
-      return {
+      let state = {
         ...prevState,
         paperData: temp,
       };
+      savePaperData2Storage(state);
+      return state;
     });
   };
 
