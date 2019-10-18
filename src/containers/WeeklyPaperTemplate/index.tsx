@@ -1,6 +1,7 @@
 import React from 'react';
-import { Typography, Input, Button } from 'antd';
+import { Typography, Input, Button, Icon } from 'antd';
 import styles from './index.module.css';
+import { copy2ClipBoard } from '../../utils/index';
 const { Title } = Typography;
 
 interface IProps {
@@ -50,6 +51,37 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
     });
   };
 
+  handleDeleteTopic = (index: number, itemIndex?: number) => {
+    this.setState(prevState => {
+      let temp = prevState.paperData;
+
+      if (itemIndex !== undefined) {
+        temp[index].items.splice(itemIndex, 1);
+        if (temp[index].items.length === 0) {
+          temp.splice(index, 1);
+        }
+      } else {
+        temp.splice(index, 1);
+      }
+
+      return {
+        ...prevState,
+        paperData: temp,
+      };
+    });
+  };
+
+  addTopic = () => {
+    this.setState(prevState => {
+      let temp = prevState;
+      temp.paperData.push({
+        topic: '',
+        items: [''],
+      });
+      return temp;
+    });
+  };
+
   handleItemInputEndter = (topicIndex: number, itemIndex: number) => {
     console.log('ENTER');
     this.setState(prevState => {
@@ -64,6 +96,7 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
       };
     });
   };
+
   handleSubmit = () => {
     const { title, paperData } = this.state;
     let result = '';
@@ -87,7 +120,7 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
       });
       addNewLine();
     });
-    console.log(result);
+    copy2ClipBoard(result);
   };
 
   render() {
@@ -97,7 +130,13 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
         <Title editable={{ onChange: this.handleTitleChange }}>{this.state.title}</Title>
         {paperData.map(({ topic, items }, index) => (
           <div className={styles.topicBlock} key={index}>
-            <Input size="large" placeholder="New Topic" value={topic} onChange={e => this.handleTopicChange(e.target.value, index)} />
+            <Input
+              size="large"
+              placeholder="New Topic"
+              value={topic}
+              onChange={e => this.handleTopicChange(e.target.value, index)}
+              addonAfter={<Icon type="delete" theme="filled" className={styles.deleteIcon} onClick={() => this.handleDeleteTopic(index)} />}
+            />
             <ol className={styles.itemList}>
               {items &&
                 items.map((v, itemIndex) => (
@@ -108,13 +147,24 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
                       value={v}
                       onPressEnter={e => this.handleItemInputEndter(index, itemIndex)}
                       onChange={e => this.handleTopicChange(e.target.value, index, itemIndex)}
+                      addonAfter={
+                        <Icon
+                          type="delete"
+                          theme="filled"
+                          className={styles.deleteIcon}
+                          onClick={() => this.handleDeleteTopic(index, itemIndex)}
+                        />
+                      }
                     />
                   </li>
                 ))}
             </ol>
           </div>
         ))}
-        <Button type="primary" onClick={() => this.handleSubmit()}>
+        <Button type="dashed" size="large" onClick={this.addTopic} block>
+          <Icon type="plus" /> Add Topic
+        </Button>
+        <Button type="primary" size="large" onClick={() => this.handleSubmit()} className={styles.submitBtn}>
           完成
         </Button>
       </div>
