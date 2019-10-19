@@ -1,8 +1,9 @@
 import React from 'react';
-import { Typography, Input, Button, Icon } from 'antd';
+import { Typography, Input, Button, Icon, Modal, message } from 'antd';
 import styles from './index.module.css';
 import { copy2ClipBoard, savePaperData2Storage, getPaperData2Storage } from '../../utils/index';
 const { Title } = Typography;
+const { confirm } = Modal;
 
 interface IProps {
   size?: string;
@@ -13,19 +14,17 @@ interface IState {
 }
 
 class WeeklyPaperTemplate extends React.Component<IProps, IState> {
-  state = {
+  emptyState = {
     title: '本周工作',
     paperData: [
       {
-        topic: '数据分析',
-        items: ['text', 'text2'],
-      },
-      {
-        topic: 'Topic2',
-        items: ['text', 'text2', 'text3', 'text4', 'text5'],
+        topic: '',
+        items: ['', ''],
       },
     ],
   };
+
+  state = this.emptyState;
 
   componentDidMount() {
     let temp = getPaperData2Storage();
@@ -89,7 +88,6 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
   };
 
   handleItemInputEndter = (topicIndex: number, itemIndex: number) => {
-    console.log('ENTER');
     this.setState(prevState => {
       let temp = prevState.paperData;
 
@@ -129,11 +127,25 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
     copy2ClipBoard(result);
   };
 
+  handleReset = () => {
+    confirm({
+      title: '你确定要清空当前所有内容吗?',
+      content: '你所有填写的内容和浏览器缓存都会丢失',
+      onOk: () => {
+        this.setState(this.emptyState);
+        savePaperData2Storage(this.emptyState);
+        message.success('已清空所有内容');
+      },
+      okText: '确认',
+      cancelText: '取消',
+    });
+  };
+
   render() {
     const { paperData } = this.state;
     return (
       <div className={styles.container}>
-        <Title editable={{ onChange: this.handleTitleChange }}>{this.state.title}</Title>
+        <Title level={2} editable={{ onChange: this.handleTitleChange }}>{this.state.title}</Title>
         {paperData.map(({ topic, items }, index) => (
           <div className={styles.topicBlock} key={index}>
             <Input
@@ -172,6 +184,9 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
         </Button>
         <Button type="primary" size="large" onClick={() => this.handleSubmit()} className={styles.submitBtn}>
           完成
+        </Button>
+        <Button type="default" size="large" onClick={() => this.handleReset()} className={styles.refreshBtn}>
+          清空
         </Button>
       </div>
     );
