@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import { WEEKLY_PAPER } from '../constant/index';
 
 export function copy2ClipBoard(str: string) {
   var tempInput = document.createElement('textarea');
@@ -8,4 +9,12 @@ export function copy2ClipBoard(str: string) {
   document.execCommand('Copy'); // 执行浏览器复制命令
   tempInput.style.display = 'none';
   message.success('已将内容复制到剪贴版');
+}
+
+export function savePaperData2Storage(state: object) {
+  localStorage.setItem(WEEKLY_PAPER, JSON.stringify(state));
+}
+
+export function getPaperData2Storage() {
+  return JSON.parse(localStorage.getItem(WEEKLY_PAPER) || '');
 }
