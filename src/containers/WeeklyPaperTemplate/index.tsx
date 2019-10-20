@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Input, Button, Icon, Modal, message } from 'antd';
 import styles from './index.module.css';
-import { copy2ClipBoard, savePaperData2Storage, getPaperData2Storage } from '../../utils/index';
+import { copy2ClipBoard, savePaperData2Storage, getPaperData2Storage, replaceTimeStrFromContent } from '../../utils/index';
 const { Title } = Typography;
 const { confirm } = Modal;
 
@@ -102,7 +102,11 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
   };
 
   handleSubmit = () => {
-    const { title, paperData } = this.state;
+    let { title, paperData } = this.state;
+    paperData = paperData.map(v => ({
+      topic: replaceTimeStrFromContent(v.topic),
+      items: v.items.map(v => replaceTimeStrFromContent(v)),
+    }));
     let result = '';
     function addNewLine(str: string = '') {
       result += str + '\n';

@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import dayjs from 'dayjs';
 import { WEEKLY_PAPER } from '../constant/index';
 
 export function copy2ClipBoard(str: string) {
@@ -17,4 +18,11 @@ export function savePaperData2Storage(state: object) {
 
 export function getPaperData2Storage() {
   return JSON.parse(localStorage.getItem(WEEKLY_PAPER) || '');
+}
+
+export function replaceTimeStrFromContent(str: string) {
+  let reg = /\[day=(\S+)\]/;
+  return str.replace(reg, (match, p1) => {
+    return dayjs().format(p1);
+  });
 }
