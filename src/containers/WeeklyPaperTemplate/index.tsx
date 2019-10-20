@@ -92,7 +92,7 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
       let temp = prevState.paperData;
 
       if (itemIndex !== undefined) {
-        temp[topicIndex].items.splice(itemIndex, 0, '');
+        temp[topicIndex].items.splice(itemIndex + 1, 0, '');
       }
       return {
         ...prevState,
@@ -145,7 +145,9 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
     const { paperData } = this.state;
     return (
       <div className={styles.container}>
-        <Title level={2} editable={{ onChange: this.handleTitleChange }}>{this.state.title}</Title>
+        <Title level={2} editable={{ onChange: this.handleTitleChange }}>
+          {this.state.title}
+        </Title>
         {paperData.map(({ topic, items }, index) => (
           <div className={styles.topicBlock} key={index}>
             <Input
@@ -163,7 +165,7 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
                       size="default"
                       placeholder="New Item"
                       value={v}
-                      onPressEnter={e => this.handleItemInputEndter(index, itemIndex)}
+                      onPressEnter={() => this.handleItemInputEndter(index, itemIndex)}
                       onChange={e => this.handleTopicChange(e.target.value, index, itemIndex)}
                       addonAfter={
                         <Icon
