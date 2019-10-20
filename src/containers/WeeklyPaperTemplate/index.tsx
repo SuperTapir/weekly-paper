@@ -103,10 +103,13 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
 
   handleSubmit = () => {
     let { title, paperData } = this.state;
+
+    // 转换时间字符串, 并处理空 Item
     paperData = paperData.map(v => ({
       topic: replaceTimeStrFromContent(v.topic),
-      items: v.items.map(v => replaceTimeStrFromContent(v)),
+      items: v.items.filter(v => v !== '').map(v => replaceTimeStrFromContent(v)),
     }));
+
     let result = '';
     function addNewLine(str: string = '') {
       result += str + '\n';
@@ -121,7 +124,8 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
     addNewLine(title);
     addNewLine();
     paperData.forEach(({ topic, items }) => {
-      addNewLine(genTabText(topic + ':', 1));
+      const topicText = items.length === 0 ? genTabText(topic, 1) : genTabText(topic + ':', 1);
+      addNewLine(topicText);
       addNewLine();
       items.forEach((item, index) => {
         addNewLine(genTabText(`${index + 1}. ${item}`, 2));
