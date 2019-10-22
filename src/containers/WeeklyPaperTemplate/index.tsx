@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Input, Button, Icon, Modal, message } from 'antd';
 import styles from './index.module.css';
-import { copy2ClipBoard, savePaperData2Storage, getPaperData2Storage } from '../../utils/index';
+import { copy2ClipBoard, savePaperData2Storage, getPaperData2Storage, replaceTimeStrFromContent } from '../../utils/index';
 const { Title } = Typography;
 const { confirm } = Modal;
 
@@ -92,7 +92,7 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
       let temp = prevState.paperData;
 
       if (itemIndex !== undefined) {
-        temp[topicIndex].items.splice(itemIndex, 0, '');
+        temp[topicIndex].items.splice(itemIndex + 1, 0, '');
       }
       return {
         ...prevState,
@@ -102,7 +102,14 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
   };
 
   handleSubmit = () => {
-    const { title, paperData } = this.state;
+    let { title, paperData } = this.state;
+
+    // 转换时间字符串, 并处理空 Item
+    paperData = paperData.map(v => ({
+      topic: replaceTimeStrFromContent(v.topic),
+      items: v.items.filter(v => v !== '').map(v => replaceTimeStrFromContent(v)),
+    }));
+
     let result = '';
     function addNewLine(str: string = '') {
       result += str + '\n';
@@ -117,7 +124,8 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
     addNewLine(title);
     addNewLine();
     paperData.forEach(({ topic, items }) => {
-      addNewLine(genTabText(topic + ':', 1));
+      const topicText = items.length === 0 ? genTabText(topic, 1) : genTabText(topic + ':', 1);
+      addNewLine(topicText);
       addNewLine();
       items.forEach((item, index) => {
         addNewLine(genTabText(`${index + 1}. ${item}`, 2));
@@ -145,7 +153,9 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
     const { paperData } = this.state;
     return (
       <div className={styles.container}>
-        <Title level={2} editable={{ onChange: this.handleTitleChange }}>{this.state.title}</Title>
+        <Title level={2} editable={{ onChange: this.handleTitleChange }}>
+          {this.state.title}
+        </Title>
         {paperData.map(({ topic, items }, index) => (
           <div className={styles.topicBlock} key={index}>
             <Input
@@ -163,7 +173,7 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
                       size="default"
                       placeholder="New Item"
                       value={v}
-                      onPressEnter={e => this.handleItemInputEndter(index, itemIndex)}
+                      onPressEnter={() => this.handleItemInputEndter(index, itemIndex)}
                       onChange={e => this.handleTopicChange(e.target.value, index, itemIndex)}
                       addonAfter={
                         <Icon
