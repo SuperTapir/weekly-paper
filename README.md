@@ -15,7 +15,7 @@ yarn build
 ## 基本功能与使用
 ### 基础
 
-![基本界面](https://tva1.sinaimg.cn/large/006y8mN6ly1g878sj8ez0j31270u0mzr.jpg)
+![基本界面](https://tva1.sinaimg.cn/large/006y8mN6ly1g87ak5o1q0j313p0u076h.jpg)
 
 界面大概是这样, 通过修改 Title, Topic 和 Topic 下的 item 来定制自己想要的内容.
 
@@ -60,7 +60,7 @@ TITLE
 
 通过上面两条高阶玩法我们可以输入如下的内容
 
-![高阶玩法](https://tva1.sinaimg.cn/large/006y8mN6ly1g87a62y1y7j30u00xitco.jpg)
+![高阶玩法](https://tva1.sinaimg.cn/large/006y8mN6ly1g87ak3hss0j30u00xjwhy.jpg)
 
 并且点击完成后, 得到的结果是这样的
 
