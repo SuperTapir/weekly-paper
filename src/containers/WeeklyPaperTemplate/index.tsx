@@ -136,12 +136,13 @@ class WeeklyPaperTemplate extends React.Component<IProps, IState> {
   };
 
   handleReset = () => {
+    const that = this;
     confirm({
       title: '你确定要清空当前所有内容吗?',
       content: '你所有填写的内容和浏览器缓存都会丢失',
       onOk: () => {
-        this.setState(this.emptyState);
-        savePaperData2Storage(this.emptyState);
+        that.setState(that.emptyState);
+        savePaperData2Storage(that.emptyState);
         message.success('已清空所有内容');
       },
       okText: '确认',
