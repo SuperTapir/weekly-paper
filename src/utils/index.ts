@@ -13,11 +13,11 @@ export function copy2ClipBoard(str: string) {
 }
 
 export function savePaperData2Storage(state: object) {
-  localStorage.setItem(WEEKLY_PAPER, JSON.stringify(state));
+  window.localStorage.setItem(WEEKLY_PAPER, JSON.stringify(state));
 }
 
 export function getPaperData2Storage() {
-  return JSON.parse(localStorage.getItem(WEEKLY_PAPER) || '');
+  return JSON.parse(window.localStorage.getItem(WEEKLY_PAPER) || '{}');
 }
 
 export function replaceTimeStrFromContent(str: string) {
